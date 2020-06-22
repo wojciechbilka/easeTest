@@ -25,7 +25,6 @@ public class Question {
     private Integer questionNumber;
     private String questionBody;
 
-    // niepotrzebny entity answer, wystarczy string i tak kolejność jest zachowana dzieki kluczom
     @ElementCollection
     @CollectionTable(name = "question_answers_mapping",
             joinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")})
