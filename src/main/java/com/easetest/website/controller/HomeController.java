@@ -12,15 +12,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,7 +42,7 @@ public class HomeController {
         String username;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
+            username = ((UserDetails) principal).getUsername();
         } else {
             username = principal.toString();
         }
@@ -69,6 +71,7 @@ public class HomeController {
     public String error403() {
         return "/error/403";
     }
+
     //TODO autologin after registration
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
@@ -78,17 +81,34 @@ public class HomeController {
 
     @PostMapping("/saveUser")
     public String saveUser(@Valid @ModelAttribute(value = "userDTO") UserRegistrationDTO userDTO, BindingResult result, Model model) {
+        if (userDTO.getUserName() != null && usernameTaken(userDTO.getUserName())) {
+            result.rejectValue("userName", "error.userDTO", "Username already exists.");
+        }
+        if (userDTO.getEmail() != null && emailTaken(userDTO.getEmail())) {
+            result.rejectValue("email", "error.userDTO", "Email taken.");
+        }
         if (result.hasErrors()) {
             model.addAttribute("userDTO", userDTO);
             System.out.println("User form error: " + userDTO);
+            System.out.println(result);
+            System.out.println("\n" + result);
+
             return "mainpage/register_form";
         }
-        System.out.println(result.toString());
 
-        System.out.println(userDTO);
 
         User user = userDTO.createUser();
         userService.save(user);
         return "mainpage/index";
+    }
+
+    private boolean usernameTaken(String username) {
+        return userService.userExist(username);
+    }
+
+    // TODO create SQL query to check if email exist
+    private boolean emailTaken(String email) {
+        Set<User> users = userService.getAll();
+        return users.stream().anyMatch(u -> u.getEmail().equals(email));
     }
 }

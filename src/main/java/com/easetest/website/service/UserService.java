@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,16 @@ public class UserService {
 
     public void deleteById(User user) {
         userRepository.delete(user);
+    }
+
+    public boolean userExist(String userName) {
+        Optional<User> user = userRepository.findByUserName(userName);
+        return user.isPresent();
+    }
+
+    public User getByUsername(String userName) {
+        Optional<User> user = userRepository.findByUserName(userName);
+        return user.isPresent() ? user.get() : null;
     }
 
 }
