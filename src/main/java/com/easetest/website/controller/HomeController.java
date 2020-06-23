@@ -67,6 +67,11 @@ public class HomeController {
         return "mainpage/login";
     }
 
+    @GetMapping("/logout")
+    public String logout() {
+        return "mainpage/index";
+    }
+
     @GetMapping("/403")
     public String error403() {
         return "/error/403";

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -32,18 +33,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        /*http
-                .antMatcher("/**").authorizeRequests().anyRequest().hasRole("USER")
-                .and().formLogin().loginPage("/login.jsp")
-                .failureUrl("/login.jsp?error=1").loginProcessingUrl("/login")
-                .permitAll().and().logout()
-                .logoutSuccessUrl("/listEmployees.html");*/
         http.authorizeRequests()
-                .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/user/**", "/business/**").hasRole("USER")
                 .antMatchers("/**").permitAll()
                 .and().formLogin().loginPage("/login").permitAll()
+                //.and()
+                //.logout().permitAll()
                 .and()
-                .logout().permitAll()
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }
