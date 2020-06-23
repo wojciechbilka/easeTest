@@ -4,6 +4,8 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +19,17 @@ public class Recruiter {
     @GenericGenerator(name = "native", strategy = "native")
     private int id;
     @EqualsAndHashCode.Exclude
+    @NotEmpty(message = "Field cannot be empty")
     private String firstName;
     @EqualsAndHashCode.Exclude
+    @NotEmpty(message = "Field cannot be empty")
     private String lastName;
     @EqualsAndHashCode.Exclude
+    @Email(message = "Wrong email format.")
+    @NotEmpty(message = "Field cannot be empty.")
     private String email;
     @EqualsAndHashCode.Exclude
+    @NotEmpty(message = "Field cannot be empty")
     private String company;
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

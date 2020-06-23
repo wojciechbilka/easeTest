@@ -22,8 +22,7 @@ import javax.validation.constraints.Size;
 public class UserRegistrationDTO {
     //TODO error message in english, not polish
 
-    @NotEmpty
-    @Size(min = 3, max = 10)
+    @Size(min = 3, max = 10, message = "Username length must contain in range 3-10 letters.")
     private String userName;
 
     @ValidPassword
@@ -31,12 +30,12 @@ public class UserRegistrationDTO {
     @ValidPassword
     private String confirmPassword;
 
-    @Email
-    @NotEmpty
+    @Email(message = "Wrong email format.")
+    @NotEmpty(message = "Field cannot be empty")
     private String email;
 
-    @Email
-    @NotEmpty
+    @Email(message = "Wrong email format.")
+    @NotEmpty(message = "Field cannot be empty")
     private String confirmEmail;
 
     public User createUser() {
