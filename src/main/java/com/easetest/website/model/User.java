@@ -31,14 +31,8 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Recruiter recruiter;
 
-    /*public User(String userName, String password, boolean active, String roles) {
-        this.userName = userName;
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
-        this.active = active;
-        this.roles = roles;
+    public void setRecruiter(Recruiter recruiter) {
+        this.recruiter = recruiter;
+        recruiter.setUser(this);
     }
-
-    public void setPassword(String password) {
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
-    }*/
 }

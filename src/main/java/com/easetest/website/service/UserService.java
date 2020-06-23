@@ -1,11 +1,8 @@
 package com.easetest.website.service;
 
-import com.easetest.website.model.Test;
 import com.easetest.website.model.User;
-import com.easetest.website.repository.TestRepository;
 import com.easetest.website.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -48,5 +45,4 @@ public class UserService {
         Optional<User> user = userRepository.findByUserName(userName);
         return user.isPresent() ? user.get() : null;
     }
-
 }
