@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <!--Bootstrap dependencies-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+
+    <meta charset="UTF-8">
+    <title>Create Test Form</title>
+</head>
+<body class="mb-2 bg-secondary text-white">
+<div th:replace="business/fragments/menu_bar.html :: div.menu-bar"></div>
+
+<div class="container">
+    <div class="form-group">
+        <h2>Create Test</h2>
+        <form action="#" th:action="@{/business/saveTest}" th:object="${test}" method="post">
+            <div class="form-group">
+                <label for="testName">Test name</label>
+                <input type="text" class="form-control" id="testName" th:field="*{testName}" placeholder="Test name"
+                       th:errorclass="is-invalid">
+                <p class="text-danger mb-10" th:if="${#fields.hasErrors('testName')}" th:errors="*{testName}"/>
+            </div>
+            <div class="form-group">
+                <label for="startTime">Test start time</label>
+                <input type="datetime-local" class="form-control" id="startTime" th:field="*{startTime}"
+                       placeholder="Test start time">
+                <p class="text-danger mb-10" th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"/>
+            </div>
+            <div class="form-group">
+                <label for="testDuration">Test duration (minutes)</label>
+                <input type="number" class="form-control" placeholder="Test duration (minutes)" id="testDuration"
+                       th:field="*{testTime}"
+                       th:errorclass="is-invalid">
+                <p class="text-danger mb-10" th:if="${#fields.hasErrors('testTime')}" th:errors="*{testTime}"/>
+            </div>
+            <div class="form-group">
+                <label for="numberOfQuestions">Number of questions</label>
+                <input type="number" class="form-control" placeholder="Number of questions" id="numberOfQuestions"
+                       th:field="*{numberOfQuestions}"
+                       th:errorclass="is-invalid">
+                <p class="text-danger mb-10" th:if="${#fields.hasErrors('numberOfQuestions')}"
+                   th:errors="*{numberOfQuestions}"/>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="testCheckbox" th:field="*{multipleAnswers}"
+                       th:errorclass="is-invalid">
+                <label class="form-check-label" for="testCheckbox">Enable multiple answers?</label>
+            </div>
+            <br>
+            <!--
+                        <input type="hidden" th:field="*{user}">
+            -->
+
+            <input type="submit" th:value="Save" class="btn btn-info">
+        </form>
+    </div>
+</div>
+</body>
+</html>
