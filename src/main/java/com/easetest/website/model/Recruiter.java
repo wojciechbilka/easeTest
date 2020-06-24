@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -39,6 +40,8 @@ public class Recruiter {
     @EqualsAndHashCode.Exclude
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
     private List<Test> testList;
+    //TODO consider adding test categories
+
 
     public void addTest(Test test) {
         if(testList == null) {
