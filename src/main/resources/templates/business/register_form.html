@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Business Register Form</title>
+
+    <link rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}" type="text/css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<div th:replace="business/fragments/menu_bar.html :: div.menu-bar"></div>
+
+<div class="container">
+    <h2>Create Recruiter Account</h2>
+    <div class="form-group">
+        <form action="#" th:action="@{/business/saveRecruiter}" th:object="${recruiter}" method="post">
+            <input type="text" class="form-control" th:field="*{firstName}" placeholder="First Name" th:errorclass="is-invalid"><br>
+            <p class="text-danger mb-10" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"/>
+
+            <input type="text" class="form-control" th:field="*{lastName}" placeholder="Last Name" th:errorclass="is-invalid"><br>
+            <p class="text-danger mb-10" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"/>
+
+            <input type="text" class="form-control" placeholder="Email" th:field="*{email}" th:errorclass="is-invalid">
+            <p class="text-danger mb-10" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"/>
+
+            <input type="text" class="form-control" placeholder="Company" th:field="*{company}" th:errorclass="is-invalid">
+            <p class="text-danger mb-10" th:if="${#fields.hasErrors('company')}" th:errors="*{company}"/>
+
+<!--
+            <input type="hidden" th:field="*{user}">
+-->
+
+            <input type="submit" th:value="Save" class="btn btn-info">
+        </form>
+        <hr>
+    </div>
+</div>
+
+
+</body>
+</html>
