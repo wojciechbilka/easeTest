@@ -8,7 +8,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -16,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Recruiter {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private int id;
     @EqualsAndHashCode.Exclude
@@ -38,21 +37,23 @@ public class Recruiter {
     @JoinColumn(name = "user_id")
     private User user;
     @EqualsAndHashCode.Exclude
-    @OneToMany(cascade=CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
     private List<Test> testList;
     //TODO consider adding test categories
 
 
     public void addTest(Test test) {
-        if(testList == null) {
+        if (testList == null) {
             testList = new ArrayList<>();
         }
+        testList.remove(test);
+
         testList.add(test);
         test.setOwner(this);
     }
 
     public void removeTest(Test test) {
-        if(testList == null) {
+        if (testList == null) {
             return;
         }
         testList.remove(test);
