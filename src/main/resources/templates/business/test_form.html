@@ -25,6 +25,7 @@
         <h2>Create Test</h2>
         <form action="#" th:action="@{/business/saveTest}" th:object="${test}" method="post">
             <div class="form-group">
+                <input type="hidden" th:field="*{id}">
                 <label for="testName">Test name</label>
                 <input type="text" class="form-control" id="testName" th:field="*{testName}" placeholder="Test name"
                        th:errorclass="is-invalid">
