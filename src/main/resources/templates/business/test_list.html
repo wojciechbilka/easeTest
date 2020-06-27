@@ -34,18 +34,21 @@
         <tbody>
         <!--TODO get rid of top border align issue-->
         <tr class="result" data-th-each="test : ${test_list}">
-            <td class="action-td"  th:text="${test.testName}"></td>
+            <td class="action-td" th:text="${test.testName}"></td>
             <td class="action-td" th:text="${test.numberOfQuestions}"></td>
             <td class="btn-group action-td">
-            <form method="post" action="#" th:action="@{/business/editTest}">
-                <input type="hidden" th:name="test_id" th:value="${test.id}">
-                <input type="submit" class="btn btn-warning" value="Edit">
-            </form>
-
-            <form method="post" action="#" th:action="@{/business/deleteTest}">
-                <input type="hidden" th:name="test_id" th:value="${test.id}">
-                <input type="submit" class="btn btn-danger" value="Delete">
-            </form>
+                <form method="post" action="#" th:action="@{/business/editTest}">
+                    <input type="hidden" th:name="test_id" th:value="${test.id}">
+                    <input type="submit" class="btn btn-warning" value="Edit">
+                </form>
+                <form method="post" action="#" th:action="@{/business/deleteTest}">
+                    <input type="hidden" th:name="test_id" th:value="${test.id}">
+                    <input type="submit" class="btn btn-danger" value="Delete">
+                </form>
+                <form method="post" action="#" th:action="@{/business/editQuestion}">
+                    <input type="hidden" th:name="test_id" th:value="${test.id}">
+                    <input type="submit" class="btn btn-secondary" value="Add Question">
+                </form>
             </td>
 
         </tr>
