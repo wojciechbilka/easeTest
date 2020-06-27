@@ -49,7 +49,7 @@ public class Test {
             joinColumns = {@JoinColumn(name = "test_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")})
     @MapKey(name = "questionNumber")
-    private Map<Integer, Question> questions;
+    private Map<Integer, Question> questions = new HashMap<>();
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
