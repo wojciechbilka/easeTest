@@ -44,7 +44,7 @@ public class Test {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "test_questions_mapping",
             joinColumns = {@JoinColumn(name = "test_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")})
