@@ -79,8 +79,18 @@ public class BusinessController {
     }
 
     //TODO Fix scenario where entering link straight to test creation throw error page after logging in (make it redirect to index page)
+    //TODO Add testFormDTO with proper validation to avoid using Test object for sending only part of objects fields
+    // (sending entire object would be also bad) use test_id to retrieve test and edit it
+    //TODO Consider merge test and question form?
     @PostMapping("/saveTest")
     public String saveTest(@Valid @ModelAttribute(value = "test") Test test, BindingResult result, Model model, Authentication authentication) {
+        Test realTest = testService.getById(test.getId());
+        realTest.setTestName(test.getTestName());
+        realTest.setNumberOfQuestions(test.getNumberOfQuestions());
+        realTest.setMultipleAnswers(test.isMultipleAnswers());
+        realTest.setStartTime(test.getStartTime());
+        realTest.setTestTime(test.getTestTime());
+
         User user = getCurrentUser(authentication);
         Recruiter recruiter = user.getRecruiter();
         //TODO Create SQL query for test name validation
@@ -91,12 +101,11 @@ public class BusinessController {
         }
 
         if (result.hasErrors()) {
+            System.out.println("Save test errors: " + result.getAllErrors());
             model.addAttribute("test", test);
             return "business/test_form";
         }
-
-        recruiter.addTest(test);
-        System.out.println(test);
+        recruiter.addTest(realTest);
         recruiterService.save(recruiter);
         model.addAttribute("recruiter", recruiter);
         return "business/index";
