@@ -4,8 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @Entity
@@ -20,35 +19,49 @@ public class Question {
 
     @EqualsAndHashCode.Exclude
     private int questionNumber;
-    private String questionBody;
 
-    @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    //TODO add orphan removal (adding new answer in case of editing)
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "question_answers_mapping",
-            joinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "answer_id", referencedColumnName = "id")})
-    @MapKey(name = "answerNumber")
-    private Map<Integer, Answer> answers = new HashMap<>();
+    private String questionBody = "";
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "test_id", nullable = false)
+    private Test test;
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question", orphanRemoval = true)
+    private List<Answer> answers = Arrays.asList(
+            new Answer(1, "", false, this),
+            new Answer(2, "", false, this),
+            new Answer(3, "", false, this),
+            new Answer(4, "", false, this));
+
+    public Question(int questionNumber) {
+        this.questionNumber = questionNumber;
+    }
 
     public void setAnswer(Integer num, String answer, boolean correct) {
         if(answers == null) {
-            answers = new HashMap<>();
+            answers = new ArrayList<>();
         }
-        Answer a = answers.get(num) != null ? answers.get(num) : new Answer();
+        Answer a = answers.get(num - 1) != null ? answers.get(num - 1) : new Answer();
         a.setAnswerNumber(num);
         a.setText(answer);
         a.setCorrect(correct);
-        answers.put(num, a);
+        a.setQuestion(this);
+        answers.set(num-1, a);
+    }
+
+    public void setAnswer(Answer answer) {
+        setAnswer(answer.getAnswerNumber(), answer.getText(), answer.isCorrect());
     }
 
     public void removeAnswer(Integer num) {
         if(answers == null) {
             return;
         }
-        answers.remove(num);
+        answers.set(num-1, new Answer(num, "", false, this));
     }
 
 }
