@@ -1,12 +1,8 @@
 package com.easetest.website.controller;
 
 import com.easetest.website.model.*;
-import com.easetest.website.service.QuestionService;
-import com.easetest.website.service.RecruiterService;
-import com.easetest.website.service.TestService;
-import com.easetest.website.service.UserService;
+import com.easetest.website.service.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -26,6 +22,7 @@ public class BusinessController {
     private final RecruiterService recruiterService;
     private final TestService testService;
     private final QuestionService questionService;
+    private final AnswerService answerService;
 
     //TODO if recruiter is not created goto creation form else redirect to requested path
     @GetMapping("/")
@@ -89,7 +86,6 @@ public class BusinessController {
         //TODO Create SQL query for test name validation
         for (Test t : recruiter.getTestList()) {
             if (t.getTestName().equals(test.getTestName()) && t.getId() != test.getId()) {
-                System.out.println("t id: " + t.getId() + " test id: " + test.getId());
                 result.rejectValue("testName", "error.test", "Test with that name already exists.");
             }
         }
@@ -104,6 +100,51 @@ public class BusinessController {
         recruiterService.save(recruiter);
         model.addAttribute("recruiter", recruiter);
         return "business/index";
+    }
+
+    //TODO if question body empty?
+    @PostMapping("/editQuestion")
+    public String editQuestion(Model model, @RequestParam("test_id") int id, @RequestParam(value = "question_id", required = false) Integer question_id) {
+        Test test = testService.getById(id);
+        List<Question> questions = test.getQuestions();
+        System.out.println(questions);
+        int realNumberOfQuestion = questions.size(); // mozliwe ze nie potrzebne
+        test.setMultipleAnswers(false);
+        Question q = question_id == null ? null : questionService.getById(question_id);
+        if(q == null) {
+            if(realNumberOfQuestion < 1) {
+                q = new Question();
+                q.setQuestionNumber(1);
+                test.setQuestion(q);
+                questionService.save(q);
+            } else if(questions.get(realNumberOfQuestion - 1).getQuestionBody().isEmpty()){
+                q = questions.get(realNumberOfQuestion - 1);
+            } else {
+                q = new Question();
+                q.setQuestionNumber(realNumberOfQuestion + 1);
+                test.setQuestion(q);
+                questionService.save(q);
+            }
+        }
+
+        model.addAttribute("test", test);
+        model.addAttribute("question", q);
+        System.out.println(q);
+
+        return "business/question_form";
+    }
+
+    @PostMapping("/saveQuestion")
+    public String saveQuestion(Model model, @ModelAttribute("question") Question question, @RequestParam("test_id") int id) {
+        Test test = testService.getById(id);
+        for(Answer a : question.getAnswers()) {
+            question.setAnswer(a);
+        }
+        test.setQuestion(question);
+        testService.save(test);
+        model.addAttribute("test", test);
+        model.addAttribute("question", question);
+        return "business/question_form";
     }
 
     @GetMapping("/showTestList")
