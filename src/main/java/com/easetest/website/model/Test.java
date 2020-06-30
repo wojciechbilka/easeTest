@@ -6,10 +6,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Data
@@ -22,7 +20,7 @@ public class Test {
     private int id;
     @EqualsAndHashCode.Exclude
     @NotEmpty(message = "Field cannot be empty.")
-    private String testName;
+    private String testName = "";
     @EqualsAndHashCode.Exclude
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @NotNull(message = "Field cannot be empty.")
@@ -44,12 +42,13 @@ public class Test {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "test_questions_mapping",
-            joinColumns = {@JoinColumn(name = "test_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")})
-    @MapKey(name = "questionNumber")
-    private Map<Integer, Question> questions = new HashMap<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "test", orphanRemoval = true)
+    private List<Question> questions = new ArrayList<>();
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "test", orphanRemoval = true)
+    private List<Candidate> candidates = new ArrayList<>();
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -57,17 +56,22 @@ public class Test {
     @JoinColumn(name = "recruiter_id", nullable = false)
     private Recruiter owner;
 
-    public void addQuestion(Question question) {
-        if(questions == null) {
-            questions = new HashMap<>();
+    public void setQuestion(Question question) {
+        question.setTest(this);
+        System.out.println("Questions size: " + questions.size());
+        System.out.println("Question number:" + question.getQuestionNumber());
+        if(questions.size() < question.getQuestionNumber()) {
+            questions.add(question);
+            question.setQuestionNumber(questions.indexOf(question) + 1);
         }
-        questions.put(question.getQuestionNumber(), question);
+        questions.set(question.getQuestionNumber()-1, question);
     }
 
     public void removeQuestion(Question question) {
-        if(questions == null) {
-            return;
+        int questionIndex = question.getQuestionNumber() - 1;
+        questions.remove(questionIndex);
+        for(int i = questionIndex; i <= questions.size() - 1; i++) {
+            questions.get(i).setQuestionNumber(i - 1);
         }
-        questions.remove(question.getQuestionNumber());
     }
 }
