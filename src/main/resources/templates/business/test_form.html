@@ -22,7 +22,7 @@
 
 <div class="container">
     <div class="form-group">
-        <h2>Create Test</h2>
+        <h2>Test Form</h2>
         <form action="#" th:action="@{/business/saveTest}" th:object="${test}" method="post">
             <div class="form-group">
                 <input type="hidden" th:field="*{id}">
@@ -58,10 +58,6 @@
                 <label class="form-check-label" for="testCheckbox">Enable multiple answers?</label>
             </div>
             <br>
-            <!--
-                        <input type="hidden" th:field="*{user}">
-            -->
-
             <input type="submit" th:value="Save" class="btn btn-info">
         </form>
     </div>
