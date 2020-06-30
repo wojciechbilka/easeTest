@@ -1,15 +1,9 @@
 package com.easetest.website.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Entity
@@ -29,14 +23,22 @@ public class Answer {
     @EqualsAndHashCode.Exclude
     private boolean correct;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private Question question;
+
     public Answer(int answerNumber, String text, boolean correct) {
         this.answerNumber = answerNumber;
         this.text = text;
         this.correct = correct;
     }
 
-
-
-
-
+    public Answer(int answerNumber, String text, boolean correct, Question question) {
+        this.answerNumber = answerNumber;
+        this.text = text;
+        this.correct = correct;
+        this.question = question;
+    }
 }
