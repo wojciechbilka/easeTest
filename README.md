@@ -1,7 +1,7 @@
 # easeTest
 Web application for carring out tests for business, education and community scope.
 
-##Prototype
+## Prototype
 Project is a prototype of platform for conducting tests and exams with proper requirements.
 
 ## Used:
