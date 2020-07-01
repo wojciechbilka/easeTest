@@ -35,7 +35,6 @@ public class BusinessController {
             //TODO Separate this case part as different method (/register)
             recruiter = new Recruiter();
             recruiter.setEmail(getCurrentUser(authentication).getEmail());
-            System.out.println(recruiter);
             model.addAttribute("recruiter", recruiter);
             return "business/register_form";
         }
@@ -58,7 +57,6 @@ public class BusinessController {
     public String createTest(Model model) {
         Test test = new Test();
         model.addAttribute("test", test);
-        //model.addAttribute("question", test.getQuestions().get(1));
         return "business/test_form";
     }
 
@@ -66,7 +64,6 @@ public class BusinessController {
     public String editTest(Model model, @RequestParam("test_id") int id) {
         Test test = testService.getById(id);
         model.addAttribute("test", test);
-        //model.addAttribute("question", test.getQuestions());
         return "business/test_form";
     }
 
@@ -84,12 +81,21 @@ public class BusinessController {
     //TODO Consider merge test and question form?
     @PostMapping("/saveTest")
     public String saveTest(@Valid @ModelAttribute(value = "test") Test test, BindingResult result, Model model, Authentication authentication) {
-        Test realTest = testService.getById(test.getId());
+        Test realTest;
+        if(test.getId() == 0) {
+            realTest = new Test();
+        } else {
+            realTest = testService.getById(test.getId());
+        }
         realTest.setTestName(test.getTestName());
         realTest.setNumberOfQuestions(test.getNumberOfQuestions());
         realTest.setMultipleAnswers(test.isMultipleAnswers());
         realTest.setStartTime(test.getStartTime());
         realTest.setTestTime(test.getTestTime());
+
+        if(realTest.getCandidates().isEmpty()) {
+            realTest.generateCandidates(10);
+        }
 
         User user = getCurrentUser(authentication);
         Recruiter recruiter = user.getRecruiter();
@@ -116,9 +122,8 @@ public class BusinessController {
     public String editQuestion(Model model, @RequestParam("test_id") int id, @RequestParam(value = "question_id", required = false) Integer question_id) {
         Test test = testService.getById(id);
         List<Question> questions = test.getQuestions();
-        System.out.println(questions);
-        int realNumberOfQuestion = questions.size(); // mozliwe ze nie potrzebne
-        test.setMultipleAnswers(false);
+        int realNumberOfQuestion = questions.size();
+
         Question q = question_id == null ? null : questionService.getById(question_id);
         if(q == null) {
             if(realNumberOfQuestion < 1) {
@@ -138,7 +143,6 @@ public class BusinessController {
 
         model.addAttribute("test", test);
         model.addAttribute("question", q);
-        System.out.println(q);
 
         return "business/question_form";
     }
@@ -160,7 +164,6 @@ public class BusinessController {
     public String showTestList(Model model, Authentication authentication) {
         List<Test> tests = getRecruiter(authentication).getTestList();
         model.addAttribute("test_list", tests);
-        System.out.println(tests);
         return "business/test_list";
     }
 
