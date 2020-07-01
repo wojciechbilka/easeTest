@@ -15,7 +15,7 @@ import java.util.*;
 @NoArgsConstructor
 public class Test {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private int id;
     @EqualsAndHashCode.Exclude
@@ -60,18 +60,68 @@ public class Test {
         question.setTest(this);
         System.out.println("Questions size: " + questions.size());
         System.out.println("Question number:" + question.getQuestionNumber());
-        if(questions.size() < question.getQuestionNumber()) {
+        if (questions.size() < question.getQuestionNumber()) {
             questions.add(question);
             question.setQuestionNumber(questions.indexOf(question) + 1);
         }
-        questions.set(question.getQuestionNumber()-1, question);
+        questions.set(question.getQuestionNumber() - 1, question);
     }
 
     public void removeQuestion(Question question) {
         int questionIndex = question.getQuestionNumber() - 1;
         questions.remove(questionIndex);
-        for(int i = questionIndex; i <= questions.size() - 1; i++) {
+        for (int i = questionIndex; i <= questions.size() - 1; i++) {
             questions.get(i).setQuestionNumber(i - 1);
         }
+    }
+
+    public void setCandidate(Candidate candidate) {
+        for (Candidate c : candidates) {
+            if (c.getPersonalKey().equals(candidate.getPersonalKey())) {
+                candidates.set(candidates.indexOf(c), candidate);
+                return;
+            }
+        }
+        addCandidate(candidate);
+
+    }
+
+    public void addCandidate(Candidate candidate) {
+        candidate.setTest(this);
+        this.candidates.add(candidate);
+    }
+
+    public Candidate getCandidate(String personalKey) {
+        for (Candidate candidate : candidates) {
+            if (candidate.getPersonalKey().equals(personalKey)) {
+                return candidate;
+            }
+        }
+        return null;
+    }
+
+    public void generateCandidates(int numberOfCandidates) {
+        Random r = new Random();
+        int max = 9999;
+        int min = 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numberOfCandidates; i++) {
+            sb.append(System.currentTimeMillis());
+            sb.append(String.format("%04d", r.nextInt((max - min) + 1) + min));
+            sb.append(i);
+            sb.append(id);
+            Candidate temp = new Candidate();
+            temp.setPersonalKey(sb.toString());
+            addCandidate(temp);
+            sb.setLength(0);
+        }
+    }
+
+    private static int getRandomNumberInRange(int min, int max) {
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
     }
 }
