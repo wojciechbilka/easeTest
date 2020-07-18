@@ -25,21 +25,20 @@
                     <a class="nav-link" href="/takeTheTest">Take The Test</a>
                 </li>
                 <!--TODO change colors of buttons and add spacing-->
-                <!--TODO expand buttons if in collapsed menu-->
                 <!--TODO if only settings button on left take out of collapse menu-->
             </ul>
             <ul class="navbar-nav ml-auto" sec:authorize="hasRole('ROLE_USER')">
                 <li class="nav-item">
-                    <a href="/" class="btn btn-warning">Community</a>
+                    <a href="/" class="btn btn-block btn-warning">Community</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/business/" class="btn btn-success">Business</a>
+                    <a href="/business/" class="btn btn-block btn-success">Business</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/" class="btn btn-primary">Education</a>
+                    <a href="/" class="btn btn-block btn-primary">Education</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/logout" class="btn btn-danger">Log out</a>
+                    <a href="/logout" class="btn btn-block btn-danger">Log out</a>
                 </li>
             </ul>
         </div>
