@@ -18,13 +18,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //TODO zastąpić field injection konstruktorem? a może @Resource?
-    @Qualifier("easeTestUserDetailsService")
-    @Autowired
     private UserDetailsService userDetailsService;
+    private AccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+    public SpringSecurityConfig(@Qualifier("easeTestUserDetailsService") UserDetailsService userDetailsService, AccessDeniedHandler accessDeniedHandler) {
+        this.userDetailsService = userDetailsService;
+        this.accessDeniedHandler = accessDeniedHandler;
+    }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
